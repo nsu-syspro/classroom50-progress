@@ -1,14 +1,14 @@
 {
  "schema": "nsu-syspro/progress/v1",
  "classroom": "mpt",
- "generated_at": "2026-09-27T17:56:34Z",
+ "generated_at": "2026-09-27T18:02:00Z",
  "assignments": [
   {
    "slug": "command-line-basics",
    "name": "Command-line basics",
    "due": "2026-09-11T16:59:00Z",
    "max_score": 10,
-   "collected_at": "2026-09-25T02:43:30Z",
+   "collected_at": "2026-09-27T18:01:50Z",
    "submitted": 17
   },
   {
@@ -16,7 +16,7 @@
    "name": "Regex basics",
    "due": "2026-09-18T16:59:00Z",
    "max_score": 10,
-   "collected_at": "2026-09-25T02:43:30Z",
+   "collected_at": "2026-09-27T18:01:50Z",
    "submitted": 17
   },
   {
@@ -24,7 +24,7 @@
    "name": "Encoding basics",
    "due": "2026-09-25T16:59:00Z",
    "max_score": 10,
-   "collected_at": "2026-09-27T16:40:46Z",
+   "collected_at": "2026-09-27T18:01:50Z",
    "submitted": 17
   }
  ],
