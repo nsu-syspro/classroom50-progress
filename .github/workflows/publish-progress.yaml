@@ -1,0 +1,80 @@
+name: Publish progress
+
+# Nightly + on-demand refresh of data/progress.json. Sequence:
+#   1. dispatch the classroom50 collect-scores workflow scoped to the classroom
+#      (fresh scores at publish time), wait for it to finish;
+#   2. generate progress.json (scores + roster + assignments via the config
+#      repo Contents API; PR review states via the PRs API);
+#   3. commit it; the push triggers the branch-based Pages deployment.
+
+on:
+  schedule:
+    # 20:00 UTC = 03:00 Asia/Novosibirsk (UTC+7)
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+    inputs:
+      collect:
+        description: "Dispatch classroom50 score collection first"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-progress
+  cancel-in-progress: false
+
+env:
+  CLASSROOM: mpt
+  CONFIG_REPO: classroom50
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Collect fresh scores (classroom50 workflow)
+        if: ${{ github.event_name == 'schedule' || inputs.collect }}
+        env:
+          GH_TOKEN: ${{ secrets.PROGRESS_PAT }}
+          ORG: ${{ github.repository_owner }}
+        run: |
+          set -euo pipefail
+          gh workflow run collect-scores.yaml \
+            --repo "$ORG/$CONFIG_REPO" \
+            -f classroom="$CLASSROOM" -f assignment=
+          sleep 5
+          RUN_ID=$(gh run list --repo "$ORG/$CONFIG_REPO" \
+            --workflow=collect-scores.yaml --event=workflow_dispatch \
+            --json databaseId,createdAt --jq 'sort_by(.createdAt) | last | .databaseId')
+          echo "waiting for collect run $RUN_ID"
+          gh run watch "$RUN_ID" --repo "$ORG/$CONFIG_REPO" --exit-status
+
+      - name: Generate progress.json
+        env:
+          PROGRESS_PAT: ${{ secrets.PROGRESS_PAT }}
+          PROGRESS_ORG: ${{ github.repository_owner }}
+          PROGRESS_CLASSROOM: ${{ env.CLASSROOM }}
+          PROGRESS_CONFIG_REPO: ${{ env.CONFIG_REPO }}
+        run: python3 scripts/generate_progress.py
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --porcelain data/progress.json)" ]; then
+            echo "no changes to progress.json"
+            exit 0
+          fi
+          git config user.name "progress-bot"
+          git config user.email "bot@progress.local"
+          git add data/progress.json
+          git commit -m "progress: refresh $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git pull --rebase origin main || true
+          git push

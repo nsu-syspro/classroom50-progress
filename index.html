@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Прогресс по заданиям — ИСП</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #24292f; --muted: #57606a; --line: #d0d7de;
+    --ok: #1a7f37; --ok-bg: #dafbe1; --warn: #9a6700; --warn-bg: #fff8c5;
+    --bad: #cf222e; --bad-bg: #ffebe9; --na: #d0d7de;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.5rem; background: var(--bg); color: var(--fg);
+    font: 15px/1.5 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+  .meta { color: var(--muted); font-size: .85rem; margin-bottom: 1rem; }
+  .legend { margin: 0 0 1rem; font-size: .85rem; color: var(--muted); }
+  .legend span { display: inline-block; padding: 0 .5em; margin-right: .75em; border-radius: 3px; }
+  table { border-collapse: collapse; width: 100%; max-width: 1200px; }
+  th, td { border: 1px solid var(--line); padding: .35rem .6rem; text-align: left; }
+  th { background: #f6f8fa; font-weight: 600; }
+  th .due { display: block; font-weight: 400; font-size: .75rem; color: var(--muted); }
+  td.student { white-space: nowrap; }
+  td.num { text-align: center; }
+  a { color: #0969da; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .badge { display: inline-block; padding: .05rem .45rem; border-radius: 3px; font-size: .78rem; }
+  .approved { background: var(--ok-bg); color: var(--ok); }
+  .changes_requested { background: var(--bad-bg); color: var(--bad); }
+  .unreviewed { background: var(--warn-bg); color: var(--warn); }
+  .no_pr, .unknown, .none { background: #f6f8fa; color: var(--muted); }
+  .missing { color: var(--na); text-align: center; }
+  footer { margin-top: 1.5rem; color: var(--muted); font-size: .8rem; }
+  .error { color: var(--bad); }
+</style>
+</head>
+<body>
+<h1>Прогресс по заданиям</h1>
+<p class="meta">Курс «Инструментарий современного программиста» · ИСП</p>
+<p class="legend">
+  Оценки и статус проверки:
+  <span class="badge approved">проверено</span>
+  <span class="badge changes_requested">есть замечания</span>
+  <span class="badge unreviewed">на проверке</span>
+  Ссылка в ячейке ведёт на ваш pull request с решением.
+</p>
+<table id="progress">
+  <thead></thead>
+  <tbody></tbody>
+</table>
+<footer id="footer"></footer>
+
+<script>
+const LEGEND_RU = {
+  approved: "проверено",
+  changes_requested: "есть замечания",
+  unreviewed: "на проверке",
+  no_pr: "нет PR",
+  unknown: "?",
+  none: ""
+};
+
+function fmtDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return d.toLocaleDateString("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
+function render(data) {
+  const table = document.getElementById("progress");
+  const thead = table.querySelector("thead");
+  const tbody = table.querySelector("tbody");
+
+  const headRow = document.createElement("tr");
+  headRow.appendChild(Object.assign(document.createElement("th"), { textContent: "Студент" }));
+  for (const a of data.assignments) {
+    const th = document.createElement("th");
+    th.append(a.name || a.slug);
+    const due = document.createElement("span");
+    due.className = "due";
+    due.textContent = "до " + fmtDate(a.due);
+    th.append(due);
+    headRow.append(th);
+  }
+  thead.append(headRow);
+
+  const cells = new Map();
+  for (const c of data.cells) cells.set(c.student + "|" + c.assignment, c);
+
+  for (const s of data.students) {
+    const tr = document.createElement("tr");
+    const nameTd = document.createElement("td");
+    nameTd.className = "student";
+    nameTd.textContent = s.display;
+    tr.append(nameTd);
+    for (const a of data.assignments) {
+      const c = cells.get(s.username + "|" + a.slug);
+      const td = document.createElement("td");
+      td.className = "num";
+      if (!c) { td.className = "missing"; td.textContent = "—"; tr.append(td); continue; }
+      if (c.score == null) {
+        td.textContent = "0/" + a.max_score;
+      } else {
+        const link = document.createElement("a");
+        link.href = c.pr_url;
+        link.textContent = c.score + "/" + a.max_score;
+        td.append(link);
+      }
+      if (c.attempts != null && c.attempts > 1) {
+        const sup = document.createElement("sup");
+        sup.textContent = c.attempts;
+        td.append(sup);
+      }
+      const badge = document.createElement("span");
+      badge.className = "badge " + c.review;
+      badge.textContent = LEGEND_RU[c.review] || c.review;
+      td.append(" "); td.append(badge);
+      tr.append(td);
+    }
+    tbody.append(tr);
+  }
+
+  const generated = new Date(data.generated_at).toLocaleString("ru-RU");
+  const collected = data.assignments
+    .filter(a => a.collected_at)
+    .map(a => `${a.name || a.slug}: ${new Date(a.collected_at).toLocaleString("ru-RU")}`)
+    .join(", ");
+  document.getElementById("footer").textContent =
+    `Данные обновлены: ${generated}. ` + (collected ? `Оценки собраны: ${collected}.` : "");
+}
+
+fetch("data/progress.json", { cache: "no-store" })
+  .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+  .then(render)
+  .catch(err => {
+    const p = document.createElement("p");
+    p.className = "error";
+    p.textContent = "Не удалось загрузить данные: " + err.message;
+    document.body.append(p);
+  });
+</script>
+</body>
+</html>

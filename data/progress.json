@@ -1,0 +1,617 @@
+{
+ "schema": "nsu-syspro/progress/v1",
+ "classroom": "mpt",
+ "generated_at": "2026-09-27T17:56:34Z",
+ "assignments": [
+  {
+   "slug": "command-line-basics",
+   "name": "Command-line basics",
+   "due": "2026-09-11T16:59:00Z",
+   "max_score": 10,
+   "collected_at": "2026-09-25T02:43:30Z",
+   "submitted": 17
+  },
+  {
+   "slug": "regex-basics",
+   "name": "Regex basics",
+   "due": "2026-09-18T16:59:00Z",
+   "max_score": 10,
+   "collected_at": "2026-09-25T02:43:30Z",
+   "submitted": 17
+  },
+  {
+   "slug": "encoding-basics",
+   "name": "Encoding basics",
+   "due": "2026-09-25T16:59:00Z",
+   "max_score": 10,
+   "collected_at": "2026-09-27T16:40:46Z",
+   "submitted": 17
+  }
+ ],
+ "students": [
+  {
+   "username": "aleksiwithlove",
+   "display": "aleksiwithlove"
+  },
+  {
+   "username": "The-Durian-art",
+   "display": "Дэннис Андреевич Артес"
+  },
+  {
+   "username": "Semex37",
+   "display": "Семён Максимович Голоколос"
+  },
+  {
+   "username": "mrygrz8",
+   "display": "Мария Игоревна Грозная"
+  },
+  {
+   "username": "Liondwap",
+   "display": "Лев Антонович Данилов"
+  },
+  {
+   "username": "semka39",
+   "display": "Семён Владимирович Дружинин"
+  },
+  {
+   "username": "vladimir212455",
+   "display": "Владимир Юрьевич Мазный"
+  },
+  {
+   "username": "reznya213",
+   "display": "Глеб Георгиевич Мирошников"
+  },
+  {
+   "username": "catinhat01",
+   "display": "Илья Павлович Обогрелов"
+  },
+  {
+   "username": "dominik-DeKoko",
+   "display": "Кирилл Васильевич Пуртов"
+  },
+  {
+   "username": "KycokXleba",
+   "display": "Михаил Александрович Санжаров"
+  },
+  {
+   "username": "Aokdi",
+   "display": "Святослав Вячеславович Стыпник"
+  },
+  {
+   "username": "Lavandamosh",
+   "display": "Илья Олегович Фадеенко"
+  },
+  {
+   "username": "vebeta",
+   "display": "Владислав Александрович Хегай"
+  },
+  {
+   "username": "FunnyGlupik",
+   "display": "Григорий Викторович Чепурченко"
+  },
+  {
+   "username": "Bimbusick",
+   "display": "Кирилл Игоревич Шелепов"
+  },
+  {
+   "username": "grommoott",
+   "display": "Григорий Алексеевич Шуваев"
+  },
+  {
+   "username": "vikxxie",
+   "display": "vikxxie"
+  }
+ ],
+ "cells": [
+  {
+   "student": "KycokXleba",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-KycokXleba/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-kycokxleba/releases/tag/submit%2F2026-09-09T12-18-46Z-a950967"
+  },
+  {
+   "student": "semka39",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-semka39/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-semka39/releases/tag/submit%2F2026-09-09T15-56-10Z-78b92d4"
+  },
+  {
+   "student": "grommoott",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 5,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-grommoott/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-grommoott/releases/tag/submit%2F2026-09-05T14-08-50Z-a1b9efe"
+  },
+  {
+   "student": "vladimir212455",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-vladimir212455/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-vladimir212455/releases/tag/submit%2F2026-09-04T12-21-40Z-db3d04d"
+  },
+  {
+   "student": "Liondwap",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-Liondwap/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-liondwap/releases/tag/submit%2F2026-09-05T11-28-42Z-9c54c47"
+  },
+  {
+   "student": "The-Durian-art",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-The-Durian-art/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-the-durian-art/releases/tag/submit%2F2026-09-09T14-52-52Z-e0a7914"
+  },
+  {
+   "student": "vikxxie",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 5,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-vikxxie/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-vikxxie/releases/tag/submit%2F2026-09-10T13-47-50Z-40454d1"
+  },
+  {
+   "student": "mrygrz8",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 6,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-mrygrz8/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-mrygrz8/releases/tag/submit%2F2026-09-06T07-33-37Z-134e961"
+  },
+  {
+   "student": "reznya213",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 21,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-reznya213/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-reznya213/releases/tag/submit%2F2026-09-09T17-37-32Z-4b7e426"
+  },
+  {
+   "student": "Semex37",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 6,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-Semex37/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-semex37/releases/tag/submit%2F2026-09-07T16-39-18Z-9582218"
+  },
+  {
+   "student": "catinhat01",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-catinhat01/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-catinhat01/releases/tag/submit%2F2026-09-07T16-11-09Z-8475680"
+  },
+  {
+   "student": "dominik-DeKoko",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 13,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-dominik-DeKoko/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-dominik-dekoko/releases/tag/submit%2F2026-09-11T14-03-55Z-b838b8a"
+  },
+  {
+   "student": "Lavandamosh",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 5,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-Lavandamosh/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-lavandamosh/releases/tag/submit%2F2026-09-10T16-41-30Z-f22889c"
+  },
+  {
+   "student": "Bimbusick",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-Bimbusick/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-bimbusick/releases/tag/submit%2F2026-09-11T02-45-42Z-cf0d748"
+  },
+  {
+   "student": "Aokdi",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 6,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-Aokdi/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-aokdi/releases/tag/submit%2F2026-09-11T16-49-01Z-7660a38"
+  },
+  {
+   "student": "FunnyGlupik",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 5,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-FunnyGlupik/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-funnyglupik/releases/tag/submit%2F2026-09-11T16-54-41Z-26a2f9a"
+  },
+  {
+   "student": "vebeta",
+   "assignment": "command-line-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-command-line-basics-vebeta/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-command-line-basics-vebeta/releases/tag/submit%2F2026-09-12T07-13-07Z-42a6acc"
+  },
+  {
+   "student": "KycokXleba",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 3,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-KycokXleba/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-kycokxleba/releases/tag/submit%2F2026-09-24T18-39-07Z-99f8760"
+  },
+  {
+   "student": "semka39",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-semka39/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-semka39/releases/tag/submit%2F2026-09-24T14-46-42Z-0351a93"
+  },
+  {
+   "student": "grommoott",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 4,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-grommoott/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-grommoott/releases/tag/submit%2F2026-09-23T07-37-58Z-cb554b3"
+  },
+  {
+   "student": "vladimir212455",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 14,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-vladimir212455/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-vladimir212455/releases/tag/submit%2F2026-09-21T07-41-25Z-af2d7e1"
+  },
+  {
+   "student": "Liondwap",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 3,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-Liondwap/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-liondwap/releases/tag/submit%2F2026-09-23T14-49-14Z-34d8231"
+  },
+  {
+   "student": "vebeta",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 9,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-vebeta/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-vebeta/releases/tag/submit%2F2026-09-25T17-28-27Z-de8498d"
+  },
+  {
+   "student": "mrygrz8",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 3,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-mrygrz8/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-mrygrz8/releases/tag/submit%2F2026-09-24T12-47-23Z-e59a785"
+  },
+  {
+   "student": "reznya213",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 5,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-reznya213/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-reznya213/releases/tag/submit%2F2026-09-24T10-15-35Z-37c8833"
+  },
+  {
+   "student": "Semex37",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 11,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-Semex37/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-semex37/releases/tag/submit%2F2026-09-24T14-59-44Z-0aa7314"
+  },
+  {
+   "student": "catinhat01",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 5,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-catinhat01/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-catinhat01/releases/tag/submit%2F2026-09-24T08-43-26Z-998ad40"
+  },
+  {
+   "student": "Lavandamosh",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 10,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-Lavandamosh/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-lavandamosh/releases/tag/submit%2F2026-09-24T14-04-40Z-15a3878"
+  },
+  {
+   "student": "The-Durian-art",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 4,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-The-Durian-art/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-the-durian-art/releases/tag/submit%2F2026-09-25T16-17-24Z-ad5fc60"
+  },
+  {
+   "student": "vikxxie",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 4,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-vikxxie/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-vikxxie/releases/tag/submit%2F2026-09-25T13-40-37Z-b96e637"
+  },
+  {
+   "student": "Bimbusick",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-Bimbusick/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-bimbusick/releases/tag/submit%2F2026-09-25T15-25-57Z-4217958"
+  },
+  {
+   "student": "Aokdi",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-Aokdi/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-aokdi/releases/tag/submit%2F2026-09-25T16-25-34Z-6df3f86"
+  },
+  {
+   "student": "dominik-DeKoko",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 5,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-dominik-DeKoko/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-dominik-dekoko/releases/tag/submit%2F2026-09-25T14-11-01Z-85ba116"
+  },
+  {
+   "student": "FunnyGlupik",
+   "assignment": "encoding-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 4,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-encoding-basics-FunnyGlupik/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-encoding-basics-funnyglupik/releases/tag/submit%2F2026-09-25T15-46-30Z-29396ad"
+  },
+  {
+   "student": "vladimir212455",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 3,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-vladimir212455/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-vladimir212455/releases/tag/submit%2F2026-09-11T14-19-36Z-7534a5f"
+  },
+  {
+   "student": "catinhat01",
+   "assignment": "regex-basics",
+   "score": 8,
+   "max_score": 10,
+   "attempts": 5,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-catinhat01/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-catinhat01/releases/tag/submit%2F2026-09-22T14-48-37Z-fdefdeb"
+  },
+  {
+   "student": "grommoott",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 3,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-grommoott/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-grommoott/releases/tag/submit%2F2026-09-17T16-10-04Z-c2a938c"
+  },
+  {
+   "student": "Liondwap",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-Liondwap/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-liondwap/releases/tag/submit%2F2026-09-17T11-24-42Z-bad4906"
+  },
+  {
+   "student": "vikxxie",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-vikxxie/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-vikxxie/releases/tag/submit%2F2026-09-17T05-16-18Z-17ccc7b"
+  },
+  {
+   "student": "mrygrz8",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-mrygrz8/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-mrygrz8/releases/tag/submit%2F2026-09-17T13-52-55Z-8b23c63"
+  },
+  {
+   "student": "Semex37",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 4,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-Semex37/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-semex37/releases/tag/submit%2F2026-09-22T13-04-55Z-0ed7fa3"
+  },
+  {
+   "student": "Lavandamosh",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-Lavandamosh/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-lavandamosh/releases/tag/submit%2F2026-09-17T16-38-39Z-bea142f"
+  },
+  {
+   "student": "KycokXleba",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 2,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-KycokXleba/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-kycokxleba/releases/tag/submit%2F2026-09-18T13-43-09Z-ed6da90"
+  },
+  {
+   "student": "semka39",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-semka39/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-semka39/releases/tag/submit%2F2026-09-17T19-45-44Z-7991fd0"
+  },
+  {
+   "student": "Bimbusick",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-Bimbusick/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-bimbusick/releases/tag/submit%2F2026-09-18T16-02-42Z-98963f2"
+  },
+  {
+   "student": "vebeta",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-vebeta/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-vebeta/releases/tag/submit%2F2026-09-18T16-24-59Z-5095c39"
+  },
+  {
+   "student": "Aokdi",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-Aokdi/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-aokdi/releases/tag/submit%2F2026-09-18T15-06-44Z-03fe8de"
+  },
+  {
+   "student": "The-Durian-art",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 1,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-The-Durian-art/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-the-durian-art/releases/tag/submit%2F2026-09-18T15-30-29Z-af833ff"
+  },
+  {
+   "student": "reznya213",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 6,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-reznya213/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-reznya213/releases/tag/submit%2F2026-09-18T17-57-10Z-b99dc21"
+  },
+  {
+   "student": "dominik-DeKoko",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 4,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-dominik-DeKoko/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-dominik-dekoko/releases/tag/submit%2F2026-09-18T14-55-01Z-4e0cc7b"
+  },
+  {
+   "student": "FunnyGlupik",
+   "assignment": "regex-basics",
+   "score": 10,
+   "max_score": 10,
+   "attempts": 3,
+   "review": "approved",
+   "pr_url": "https://github.com/nsu-syspro/mpt-regex-basics-FunnyGlupik/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-regex-basics-funnyglupik/releases/tag/submit%2F2026-09-18T16-54-46Z-d68a665"
+  }
+ ]
+}
