@@ -4,6 +4,8 @@
 For every subdirectory with publish.json where enabled != false and an
 existing data/progress.json, emits an entry:
   {"slug", "title", "generated_at"}
+The last publish run's outcome comes from env (LAST_RUN_CONCLUSION,
+LAST_RUN_AT) so the page can show a status line linking to Actions.
 Writes classrooms.json at the repo root. Exit 0 always; the workflow decides
 whether anything changed.
 """
@@ -42,11 +44,23 @@ def main() -> int:
             "generated_at": data.get("generated_at"),
         })
 
+    last_run = None
+    if os.environ.get("LAST_RUN_CONCLUSION"):
+        last_run = {
+            "conclusion": os.environ["LAST_RUN_CONCLUSION"],
+            "created_at": os.environ.get("LAST_RUN_AT"),
+        }
+
+    doc = {
+        "schema": "nsu-syspro/progress-classrooms/v1",
+        "last_run": last_run,
+        "classrooms": entries,
+    }
     out_path = os.path.join(ROOT, "classrooms.json")
     with open(out_path, "w", encoding="utf-8") as fh:
-        json.dump(entries, fh, ensure_ascii=False, indent=1)
+        json.dump(doc, fh, ensure_ascii=False, indent=1)
         fh.write("\n")
-    print(f"classrooms.json: {len(entries)} classrooms")
+    print(f"classrooms.json: {len(entries)} classrooms, last_run={last_run}")
     return 0
 
 

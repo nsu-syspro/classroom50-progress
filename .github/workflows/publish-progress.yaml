@@ -126,6 +126,9 @@ jobs:
           ref: main
 
       - run: python3 scripts/build_index.py
+        env:
+          LAST_RUN_CONCLUSION: ${{ needs.publish.result }}
+          LAST_RUN_AT: ${{ github.event.schedule || github.event.created_at }}
 
       - name: Commit if changed
         run: |

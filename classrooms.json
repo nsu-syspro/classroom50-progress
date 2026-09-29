@@ -1,7 +1,11 @@
-[
- {
-  "slug": "mpt",
-  "title": "Modern Programmer's Tools",
-  "generated_at": "2026-09-29T01:29:23Z"
- }
-]
+{
+ "schema": "nsu-syspro/progress-classrooms/v1",
+ "last_run": null,
+ "classrooms": [
+  {
+   "slug": "mpt",
+   "title": "Modern Programmer's Tools",
+   "generated_at": "2026-09-29T02:48:58Z"
+  }
+ ]
+}

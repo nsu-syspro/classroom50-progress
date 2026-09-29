@@ -15,11 +15,14 @@
     margin: 0; padding: 1.5rem; background: var(--bg); color: var(--fg);
     font: 15px/1.5 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
+  /* center everything on wide screens; the content column is capped and
+     floats in the middle, so no one-sided empty space */
+  #app { max-width: 1200px; margin: 0 auto; }
   h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
   .meta { color: var(--muted); font-size: .85rem; margin-bottom: 1rem; }
   .legend { margin: 0 0 1rem; font-size: .85rem; color: var(--muted); }
   .legend span { display: inline-block; padding: 0 .5em; margin-right: .75em; border-radius: 3px; }
-  table { border-collapse: collapse; width: 100%; max-width: 1200px; }
+  table { border-collapse: collapse; width: 100%; }
   th, td { border: 1px solid var(--line); padding: .35rem .6rem; text-align: left; }
   th { background: #f6f8fa; font-weight: 600; }
   th .due { display: block; font-weight: 400; font-size: .75rem; color: var(--muted); }
@@ -47,6 +50,9 @@
   ul.classrooms a { display: block; padding: .6rem .9rem; font-size: 1.05rem; }
   ul.classrooms .sub { display: block; font-size: .8rem; color: var(--muted); }
   .back { font-size: .85rem; margin-bottom: .75rem; display: inline-block; }
+  .runline { font-size: .85rem; margin: 0 0 1rem; color: var(--muted); }
+  .runline a { margin-left: .4em; }
+  .runline .failed { color: var(--bad); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -88,13 +94,35 @@ async function renderIndex() {
   app.append(el("h1", null, "Прогресс по заданиям"));
   app.append(el("p", "meta", "NSU Sys.Pro"));
 
-  let classrooms;
+  let index;
   try {
-    classrooms = await getJson("classrooms.json");
+    index = await getJson("classrooms.json");
   } catch (err) {
     app.append(el("p", "error", "Не удалось загрузить список курсов: " + err.message));
     return;
   }
+
+  // refresh status line: outcome of the last publish run + link to Actions
+  const RUNS_URL = "https://github.com/nsu-syspro/classroom50-progress/actions/workflows/publish-progress.yaml";
+  if (index.last_run) {
+    const line = el("p", "runline");
+    const when = index.last_run.created_at
+      ? new Date(index.last_run.created_at).toLocaleString("ru-RU") : "";
+    if (index.last_run.conclusion === "success") {
+      line.append("Последнее обновление " + (when ? "(" + when + ") " : "") + "прошло успешно.");
+    } else {
+      line.append(el("span", "failed",
+        "Последнее обновление " + (when ? "(" + when + ") " : "") + "завершилось с ошибкой."));
+    }
+    const link = el("a", null, "журнал запусков / перезапустить");
+    link.href = RUNS_URL;
+    link.target = "_blank";
+    link.rel = "noopener";
+    line.append(link);
+    app.append(line);
+  }
+
+  const classrooms = index.classrooms || [];
   if (!classrooms.length) {
     app.append(el("p", "meta", "Пока нет опубликованных курсов."));
     return;
