@@ -78,7 +78,18 @@ jobs:
             --workflow=collect-scores.yaml --event=workflow_dispatch \
             --json databaseId,createdAt --jq 'sort_by(.createdAt) | last | .databaseId')
           echo "waiting for collect run $RUN_ID"
-          gh run watch "$RUN_ID" --repo "$ORG/$CONFIG_REPO" --exit-status
+          # Poll status instead of `gh run watch`: watch fetches check-run
+          # annotations on every refresh, which a fine-grained PAT cannot do
+          # (no checks:read for fine-grained PATs) and spams 403 warnings.
+          while true; do
+            STATE=$(gh run view "$RUN_ID" --repo "$ORG/$CONFIG_REPO" \
+              --json status,conclusion --jq '"\(.status):\(.conclusion // "")"')
+            case "$STATE" in
+              completed:success) echo "collect run $RUN_ID succeeded"; break ;;
+              completed:*) echo "collect run $RUN_ID finished: $STATE"; exit 1 ;;
+            esac
+            sleep 15
+          done
 
       - name: Generate progress.json
         env:
