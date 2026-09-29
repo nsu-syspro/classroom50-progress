@@ -31,7 +31,8 @@ schemas/
 .github/workflows/
   publish-progress.yaml          nightly 03:00 NSK + dispatch: collect ->
                                  generate -> commit if content changed -> index
-  validate-json.yaml             every push: JSON schema validation + actionlint
+  validate.yaml                  every push: JSON schemas + actionlint +
+                                 jsdom render tests (tests/)
 ```
 
 ## publish.json format
@@ -108,16 +109,19 @@ Set `"enabled": false` in its `publish.json`. It drops out of the matrix
 - Review states (проверено / есть замечания / на проверке) are fetched live
   from the Feedback PRs at generation time.
 
-## JSON format enforcement
+## Validation and tests
 
-All three JSON kinds are checked against JSON Schema (draft 2020-12) on
-every push and PR (`.github/workflows/validate-json.yaml`), plus actionlint
-for the workflows. `publish.json` files carry a `$schema` pointer, so
-editors validate them as you type. Run the checks locally with:
-
-```sh
-python3 scripts/validate_json.py   # pip install jsonschema
-```
+- JSON formats: all three JSON kinds are checked against JSON Schema
+  (draft 2020-12) on every push and PR. `publish.json` files carry a
+  `$schema` pointer, so editors validate them as you type. Locally:
+  `python3 scripts/validate_json.py` (pip install jsonschema).
+- Render tests: `tests/` renders index.html with jsdom against the real
+  JSON data (both views: classroom list and classroom table) and asserts
+  headers, badges, links, footer and absence of rendering artifacts.
+  Locally: `npm ci && npm test` in `tests/` (needs Node 18+).
+- Workflows: actionlint on every push.
+- `tests/fetch_live.mjs` additionally checks the deployed site; run it
+  manually after publishing (`node tests/fetch_live.mjs`).
 
 ## Secrets
 

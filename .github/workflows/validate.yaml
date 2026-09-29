@@ -1,0 +1,52 @@
+name: Validate
+
+# Every push/PR: all publish.json / data/progress.json / classrooms.json
+# files must match the schemas in schemas/, workflows must lint, and the
+# page's render tests (jsdom) must pass. This is the enforcement point for
+# the JSON formats; it keeps human-edited publish.json files honest and
+# catches page regressions (e.g. the '[object HTMLSpanElement]' bug).
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - run: pip install jsonschema
+
+      - run: python3 scripts/validate_json.py
+
+      - name: Lint workflows
+        run: |
+          pip install actionlint-py
+          actionlint
+
+  render-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+
+      - name: Install test dependencies
+        working-directory: tests
+        run: npm ci
+
+      - name: Render tests (jsdom)
+        working-directory: tests
+        run: npm test

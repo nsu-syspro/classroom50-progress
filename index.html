@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Прогресс по заданиям</title>
+<title>Прогресс — NSU Sys.Pro</title>
 <style>
   :root {
     --bg: #ffffff; --fg: #24292f; --muted: #57606a; --line: #d0d7de;
@@ -89,8 +89,7 @@ async function getJson(url) {
 /* ---- classroom list view ---- */
 async function renderIndex() {
   app.replaceChildren();
-  app.append(el("h1", null, "Прогресс по заданиям"));
-  app.append(el("p", "meta", "NSU Sys.Pro"));
+  app.append(el("h1", null, "NSU Sys.Pro"));
 
   let index;
   try {
@@ -129,8 +128,9 @@ async function renderClassroom(slug) {
   try {
     data = await getJson(slug + "/data/progress.json");
   } catch (err) {
-    app.append(el("h1", null, "Прогресс по заданиям"));
-    app.append(el("p", "error", "Не удалось загрузить данные курса «" + slug + "»: " + err.message));
+    app.append(el("h1", null, slug));
+    app.append(el("p", "meta", "NSU Sys.Pro"));
+    app.append(el("p", "error", "Не удалось загрузить данные: " + err.message));
     const back = el("a", "back", "← все курсы");
     back.href = "?";
     app.append(back);
@@ -140,8 +140,8 @@ async function renderClassroom(slug) {
   const back = el("a", "back", "← все курсы");
   back.href = "?";
   app.append(back);
-  app.append(el("h1", null, "Прогресс по заданиям"));
-  app.append(el("p", "meta", "Курс «" + (data.classroom_title || data.classroom) + "» · NSU Sys.Pro"));
+  app.append(el("h1", null, data.classroom_title || data.classroom));
+  app.append(el("p", "meta", "NSU Sys.Pro"));
   const legend = el("p", "legend");
   legend.append("Оценки и статус проверки: ");
   legend.append(el("span", "badge approved", LEGEND_RU.approved));
