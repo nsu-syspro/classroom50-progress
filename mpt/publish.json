@@ -1,7 +1,6 @@
 {
   "$schema": "../schemas/publish.schema.json",
   "enabled": true,
-  "title": "ИСП",
   "mode": "past-due",
   "assignments": [],
   "exclude_students": [

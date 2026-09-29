@@ -38,7 +38,7 @@ def main() -> int:
             continue
         entries.append({
             "slug": name,
-            "title": knobs.get("title") or data.get("classroom_title") or name,
+            "title": data.get("classroom_title") or name,
             "generated_at": data.get("generated_at"),
         })
 

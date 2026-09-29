@@ -45,7 +45,6 @@ Edited by humans. Full reference with per-field docs lives in
 {
   "$schema": "../schemas/publish.schema.json",
   "enabled": true,
-  "title": "ИСП",
   "mode": "past-due",
   "assignments": [],
   "exclude_students": ["aleksiwithlove"]
@@ -55,10 +54,12 @@ Edited by humans. Full reference with per-field docs lives in
 | Field             | Type           | Default     | Meaning |
 |-------------------|----------------|-------------|---------|
 | `enabled`         | bool           | (required)  | master switch: `false` = no collection, no page data refresh, hidden from the classroom list; data files stay in place |
-| `title`           | string         | dir name    | display name on the page and in the list |
 | `mode`            | string         | `past-due`  | `past-due`: assignments whose deadline has passed (locked ones always skipped); `explicit`: only slugs in `assignments` |
 | `assignments`     | array of slugs | `[]`        | used in `explicit` mode only |
 | `exclude_students`| array of names | `[]`        | usernames never shown; roster staff is excluded automatically |
+
+The display name (page header, classroom list) comes from the config repo's
+`<classroom>/classroom.json` field `name`; it is not configured here.
 
 ## Adding a classroom
 
@@ -68,8 +69,7 @@ Edited by humans. Full reference with per-field docs lives in
    ```json
    {
      "$schema": "../schemas/publish.schema.json",
-     "enabled": true,
-     "title": "Bash"
+     "enabled": true
    }
    ```
 

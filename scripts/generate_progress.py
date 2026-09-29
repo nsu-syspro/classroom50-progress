@@ -13,11 +13,13 @@ collected entry. Writes <classroom>/data/progress.json
 Classroom knobs come from <classroom>/publish.json in this repo:
   {
     "enabled": true,               # master switch: publish this classroom
-    "title": "ИСП",                # optional display title
     "mode": "past-due",            # past-due (default) | explicit
     "assignments": [],             # explicit mode: only these slugs
     "exclude_students": []         # usernames never shown
   }
+
+The display name comes from the config repo's <classroom>/classroom.json
+(field "name"), not from publish.json.
 
 If enabled is false the script exits without writing anything.
 
@@ -204,11 +206,20 @@ def main() -> int:
         print(f"{CLASSROOM}: disabled in publish.json, nothing to do")
         return 0
 
+    classroom_raw = raw_file(CONFIG_REPO, f"{CLASSROOM}/classroom.json")
     assignments_raw = raw_file(CONFIG_REPO, f"{CLASSROOM}/assignments.json")
     scores_raw = raw_file(CONFIG_REPO, f"{CLASSROOM}/scores.json")
     roster_raw = raw_file(CONFIG_REPO, f"{CLASSROOM}/roster.csv")
     if assignments_raw is None or scores_raw is None:
         die(f"missing {CLASSROOM}/assignments.json or scores.json in {ORG}/{CONFIG_REPO}")
+    classroom_name = CLASSROOM
+    if classroom_raw is not None:
+        try:
+            classroom_name = json.loads(classroom_raw).get("name") or CLASSROOM
+        except json.JSONDecodeError:
+            print(f"warning: {CLASSROOM}/classroom.json is not valid JSON", file=sys.stderr)
+        else:
+            print(f"classroom name from classroom50: {classroom_name}")
 
     all_assignments = json.loads(assignments_raw)["assignments"]
     published = select_assignments(all_assignments, knobs, now)
@@ -280,7 +291,7 @@ def main() -> int:
     doc = {
         "schema": SCHEMA,
         "classroom": CLASSROOM,
-        "classroom_title": knobs.get("title") or CLASSROOM,
+        "classroom_title": classroom_name,
         "generated_at": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "assignments": [
             {

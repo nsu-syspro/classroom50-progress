@@ -86,7 +86,7 @@ async function getJson(url) {
 async function renderIndex() {
   app.replaceChildren();
   app.append(el("h1", null, "Прогресс по заданиям"));
-  app.append(el("p", "meta", "Курсы на платформе classroom50"));
+  app.append(el("p", "meta", "NSU Sys.Pro"));
 
   let classrooms;
   try {
@@ -133,18 +133,16 @@ async function renderClassroom(slug) {
   back.href = "?";
   app.append(back);
   app.append(el("h1", null, "Прогресс по заданиям"));
-  app.append(el("p", "meta", "Курс «" + (data.classroom_title || data.classroom) + "» · ИСП"));
-  app.append(el("p", "legend", (() => {
-    const p = el("span");
-    p.textContent = "Оценки и статус проверки: ";
-    p.append(Object.assign(el("span", "badge approved"), { textContent: LEGEND_RU.approved }));
-    p.append(" ");
-    p.append(Object.assign(el("span", "badge changes_requested"), { textContent: LEGEND_RU.changes_requested }));
-    p.append(" ");
-    p.append(Object.assign(el("span", "badge unreviewed"), { textContent: LEGEND_RU.unreviewed }));
-    p.append(". Ссылка в ячейке ведёт на ваш pull request с решением.");
-    return p;
-  })()));
+  app.append(el("p", "meta", "Курс «" + (data.classroom_title || data.classroom) + "» · NSU Sys.Pro"));
+  const legend = el("p", "legend");
+  legend.append("Оценки и статус проверки: ");
+  legend.append(el("span", "badge approved", LEGEND_RU.approved));
+  legend.append(" ");
+  legend.append(el("span", "badge changes_requested", LEGEND_RU.changes_requested));
+  legend.append(" ");
+  legend.append(el("span", "badge unreviewed", LEGEND_RU.unreviewed));
+  legend.append(". Ссылка в ячейке ведёт на ваш pull request с решением.");
+  app.append(legend);
 
   const table = el("table");
   const thead = el("thead");

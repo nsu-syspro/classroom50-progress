@@ -15,10 +15,6 @@
       "type": "boolean",
       "description": "Master switch. false = classroom is excluded from the workflow matrix: no collection, no page data refresh, hidden from the classroom list. Existing data files are left untouched."
     },
-    "title": {
-      "type": "string",
-      "description": "Display name shown on the page and in the classroom list (e.g. a course abbreviation). Defaults to the directory name."
-    },
     "mode": {
       "enum": ["past-due", "explicit"],
       "default": "past-due",
