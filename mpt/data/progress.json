@@ -1,8 +1,8 @@
 {
  "schema": "nsu-syspro/progress/v1",
  "classroom": "mpt",
- "classroom_title": "mpt",
- "generated_at": "2026-09-29T01:08:01Z",
+ "classroom_title": "ИСП",
+ "generated_at": "2026-09-29T01:13:52Z",
  "assignments": [
   {
    "slug": "command-line-basics",
