@@ -128,3 +128,17 @@ Set `"enabled": false` in its `publish.json`. It drops out of the matrix
 `PROGRESS_PAT` - fine-grained PAT with Contents RW, Actions RW,
 Pull requests R, Members R on the org. Rotated by the teacher; when it
 expires the nightly run fails at the collect step (visible in Actions).
+
+## Maintainer workflow (avoiding push conflicts)
+
+The publish workflow commits generated files to `main` on its own (nightly
+schedule + manual dispatches). Local edits therefore follow this order:
+
+1. `git pull --rebase` before starting work.
+2. Commit source changes (page, scripts, schemas, publish.json) first.
+3. Only then dispatch publish runs to verify; after a run finishes,
+   `git pull --rebase` again before pushing anything.
+4. Never commit locally regenerated `data/progress.json` / `classrooms.json`
+   - the bot owns them; local copies are test fixtures only. If a rebase
+   conflicts in a generated file, take the remote side and regenerate
+   locally if the code change affects output.
