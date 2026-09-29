@@ -50,9 +50,7 @@
   ul.classrooms a { display: block; padding: .6rem .9rem; font-size: 1.05rem; }
   ul.classrooms .sub { display: block; font-size: .8rem; color: var(--muted); }
   .back { font-size: .85rem; margin-bottom: .75rem; display: inline-block; }
-  .runline { font-size: .85rem; margin: 0 0 1rem; color: var(--muted); }
-  .runline a { margin-left: .4em; }
-  .runline .failed { color: var(--bad); font-weight: 600; }
+  footer a.failed { color: var(--bad); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -102,26 +100,6 @@ async function renderIndex() {
     return;
   }
 
-  // refresh status line: outcome of the last publish run + link to Actions
-  const RUNS_URL = "https://github.com/nsu-syspro/classroom50-progress/actions/workflows/publish-progress.yaml";
-  if (index.last_run) {
-    const line = el("p", "runline");
-    const when = index.last_run.created_at
-      ? new Date(index.last_run.created_at).toLocaleString("ru-RU") : "";
-    if (index.last_run.conclusion === "success") {
-      line.append("Последнее обновление " + (when ? "(" + when + ") " : "") + "прошло успешно.");
-    } else {
-      line.append(el("span", "failed",
-        "Последнее обновление " + (when ? "(" + when + ") " : "") + "завершилось с ошибкой."));
-    }
-    const link = el("a", null, "журнал запусков / перезапустить");
-    link.href = RUNS_URL;
-    link.target = "_blank";
-    link.rel = "noopener";
-    line.append(link);
-    app.append(line);
-  }
-
   const classrooms = index.classrooms || [];
   if (!classrooms.length) {
     app.append(el("p", "meta", "Пока нет опубликованных курсов."));
@@ -142,6 +120,8 @@ async function renderIndex() {
 }
 
 /* ---- single classroom view ---- */
+const RUNS_URL = "https://github.com/nsu-syspro/classroom50-progress/actions/workflows/publish-progress.yaml";
+
 async function renderClassroom(slug) {
   app.replaceChildren();
 
@@ -216,13 +196,36 @@ async function renderClassroom(slug) {
   table.append(thead, tbody);
   app.append(table);
 
-  const generated = new Date(data.generated_at).toLocaleString("ru-RU");
-  const collected = data.assignments
-    .filter(a => a.collected_at)
-    .map(a => (a.name || a.slug) + ": " + new Date(a.collected_at).toLocaleString("ru-RU"))
-    .join(", ");
-  app.append(el("footer", null,
-    "Данные обновлены: " + generated + ". " + (collected ? "Оценки собраны: " + collected + "." : "")));
+  // footer: last refresh date (linked to the Actions run history, where a
+  // failed run can be re-run) + a visible indicator when it failed
+  let lastRun = null;
+  try {
+    lastRun = (await getJson("classrooms.json")).last_run;
+  } catch { /* index data is optional for the footer */ }
+
+  const footer = el("footer");
+  const failed = lastRun && lastRun.conclusion !== "success";
+  const when = lastRun && lastRun.created_at
+    ? new Date(lastRun.created_at)
+    : (data.generated_at ? new Date(data.generated_at) : null);
+  footer.append("Обновлено: ");
+  if (when) {
+    const link = el("a", failed ? "failed" : null,
+      when.toLocaleString("ru-RU"));
+    link.href = RUNS_URL;
+    link.target = "_blank";
+    link.rel = "noopener";
+    footer.append(link);
+  }
+  if (failed) {
+    const warn = el("a", "failed", " · обновление с ошибкой, журнал запусков");
+    warn.href = RUNS_URL;
+    warn.target = "_blank";
+    warn.rel = "noopener";
+    footer.append(warn);
+  }
+  footer.append(". Ссылка в ячейке ведёт на ваш pull request с решением.");
+  app.append(footer);
 }
 
 const slug = new URLSearchParams(location.search).get("classroom");
