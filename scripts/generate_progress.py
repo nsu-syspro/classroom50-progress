@@ -141,8 +141,13 @@ def parse_rfc3339(value: str) -> datetime | None:
         return None
 
 
-def load_knobs() -> dict:
-    with open(os.path.join(ROOT, "publish.json"), encoding="utf-8") as fh:
+def load_knobs(classroom: str) -> dict:
+    path = os.path.join(ROOT, classroom, "publish.json")
+    if not os.path.exists(path):
+        # Sensible defaults when a classroom has no knobs file yet.
+        return {"mode": "past-due", "assignments": [], "exclude_students": [],
+                "show_attempts": True}
+    with open(path, encoding="utf-8") as fh:
         return json.load(fh)
 
 
@@ -189,7 +194,7 @@ def review_state(slug: str, owner: str) -> str:
 
 def main() -> int:
     now = datetime.now(timezone.utc)
-    knobs = load_knobs()
+    knobs = load_knobs(CLASSROOM)
 
     assignments_raw = raw_file(CONFIG_REPO, f"{CLASSROOM}/assignments.json")
     scores_raw = raw_file(CONFIG_REPO, f"{CLASSROOM}/scores.json")
@@ -295,7 +300,7 @@ def main() -> int:
         "cells": cells,
     }
 
-    out_path = os.path.join(ROOT, "data", "progress.json")
+    out_path = os.path.join(ROOT, CLASSROOM, "data", "progress.json")
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as fh:
         json.dump(doc, fh, ensure_ascii=False, indent=1)

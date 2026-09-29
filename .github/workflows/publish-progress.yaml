@@ -1,11 +1,15 @@
 name: Publish progress
 
-# Nightly + on-demand refresh of data/progress.json. Sequence:
-#   1. dispatch the classroom50 collect-scores workflow scoped to the classroom
-#      (fresh scores at publish time), wait for it to finish;
-#   2. generate progress.json (scores + roster + assignments via the config
-#      repo Contents API; PR review states via the PRs API);
-#   3. commit it; the push triggers the branch-based Pages deployment.
+# Refresh progress pages for every classroom in the matrix. Sequence:
+#   1. dispatch the classroom50 collect-scores workflow scoped to the
+#      classroom (fresh scores at publish time), wait for it to finish;
+#   2. generate <classroom>/data/progress.json (scores + roster + assignments
+#      via the config repo Contents API; PR review states via the PRs API);
+#   3. commit it ONLY if the content changed (generated_at/collected_at
+#      timestamps are ignored when comparing); a push triggers the
+#      branch-based Pages deployment.
+# A failed collect or generate turns the run red and commits nothing, so
+# Actions runs are the log of refresh attempts.
 
 on:
   schedule:
@@ -17,6 +21,10 @@ on:
         description: "Dispatch classroom50 score collection first"
         type: boolean
         default: true
+      classroom:
+        description: "Publish only this classroom (empty = all in the matrix)"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -26,11 +34,17 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  CLASSROOM: mpt
   CONFIG_REPO: classroom50
 
 jobs:
   publish:
+    strategy:
+      # One broken classroom must not block the others.
+      fail-fast: false
+      matrix:
+        classroom: [mpt]
+    # Manual runs may target a single classroom.
+    if: ${{ github.event.inputs.classroom == '' || github.event.inputs.classroom == matrix.classroom }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -45,6 +59,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PROGRESS_PAT }}
           ORG: ${{ github.repository_owner }}
+          CLASSROOM: ${{ matrix.classroom }}
         run: |
           set -euo pipefail
           gh workflow run collect-scores.yaml \
@@ -61,20 +76,46 @@ jobs:
         env:
           PROGRESS_PAT: ${{ secrets.PROGRESS_PAT }}
           PROGRESS_ORG: ${{ github.repository_owner }}
-          PROGRESS_CLASSROOM: ${{ env.CLASSROOM }}
+          PROGRESS_CLASSROOM: ${{ matrix.classroom }}
           PROGRESS_CONFIG_REPO: ${{ env.CONFIG_REPO }}
         run: python3 scripts/generate_progress.py
 
-      - name: Commit and push
+      - name: Commit if content changed
+        env:
+          CLASSROOM: ${{ matrix.classroom }}
         run: |
           set -euo pipefail
-          if [ -z "$(git status --porcelain data/progress.json)" ]; then
-            echo "no changes to progress.json"
-            exit 0
+          FILE="$CLASSROOM/data/progress.json"
+          git fetch origin main -q
+
+          if git cat-file -e "origin/main:$FILE" 2>/dev/null; then
+            git show "origin/main:$FILE" > /tmp/old.json
+            if python3 - "$FILE" <<'PY'
+import json, sys
+
+with open(sys.argv[1]) as fh:
+    new = json.load(fh)
+with open("/tmp/old.json") as fh:
+    old = json.load(fh)
+
+for doc in (new, old):
+    doc.pop("generated_at", None)
+    for a in doc.get("assignments", []):
+        a.pop("collected_at", None)
+
+sys.exit(0 if new == old else 1)
+PY
+            then
+              echo "no content changes in $FILE, skipping commit"
+              exit 0
+            fi
+          else
+            echo "first publish of $FILE"
           fi
+
           git config user.name "progress-bot"
           git config user.email "bot@progress.local"
-          git add data/progress.json
-          git commit -m "progress: refresh $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git pull --rebase origin main || true
+          git add "$FILE"
+          git commit -m "progress($CLASSROOM): refresh content"
+          git pull --rebase origin main
           git push
