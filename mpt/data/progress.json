@@ -2,7 +2,7 @@
  "schema": "nsu-syspro/progress/v1",
  "classroom": "mpt",
  "classroom_title": "Modern Programmer's Tools",
- "generated_at": "2026-09-29T02:48:58Z",
+ "generated_at": "2026-09-29T03:26:48Z",
  "assignments": [
   {
    "slug": "command-line-basics",
@@ -56,67 +56,67 @@
  "students": [
   {
    "username": "The-Durian-art",
-   "display": "Дэннис Андреевич Артес"
+   "display": "Артес Дэннис Андреевич"
   },
   {
    "username": "Semex37",
-   "display": "Семён Максимович Голоколос"
+   "display": "Голоколос Семён Максимович"
   },
   {
    "username": "mrygrz8",
-   "display": "Мария Игоревна Грозная"
+   "display": "Грозная Мария Игоревна"
   },
   {
    "username": "Liondwap",
-   "display": "Лев Антонович Данилов"
+   "display": "Данилов Лев Антонович"
   },
   {
    "username": "semka39",
-   "display": "Семён Владимирович Дружинин"
+   "display": "Дружинин Семён Владимирович"
   },
   {
    "username": "vladimir212455",
-   "display": "Владимир Юрьевич Мазный"
+   "display": "Мазный Владимир Юрьевич"
   },
   {
    "username": "reznya213",
-   "display": "Глеб Георгиевич Мирошников"
+   "display": "Мирошников Глеб Георгиевич"
   },
   {
    "username": "catinhat01",
-   "display": "Илья Павлович Обогрелов"
+   "display": "Обогрелов Илья Павлович"
   },
   {
    "username": "dominik-DeKoko",
-   "display": "Кирилл Васильевич Пуртов"
+   "display": "Пуртов Кирилл Васильевич"
   },
   {
    "username": "KycokXleba",
-   "display": "Михаил Александрович Санжаров"
+   "display": "Санжаров Михаил Александрович"
   },
   {
    "username": "Aokdi",
-   "display": "Святослав Вячеславович Стыпник"
+   "display": "Стыпник Святослав Вячеславович"
   },
   {
    "username": "Lavandamosh",
-   "display": "Илья Олегович Фадеенко"
+   "display": "Фадеенко Илья Олегович"
   },
   {
    "username": "vebeta",
-   "display": "Владислав Александрович Хегай"
+   "display": "Хегай Владислав Александрович"
   },
   {
    "username": "FunnyGlupik",
-   "display": "Григорий Викторович Чепурченко"
+   "display": "Чепурченко Григорий Викторович"
   },
   {
    "username": "Bimbusick",
-   "display": "Кирилл Игоревич Шелепов"
+   "display": "Шелепов Кирилл Игоревич"
   },
   {
    "username": "grommoott",
-   "display": "Григорий Алексеевич Шуваев"
+   "display": "Шуваев Григорий Алексеевич"
   },
   {
    "username": "vikxxie",

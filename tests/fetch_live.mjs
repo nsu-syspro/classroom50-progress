@@ -18,8 +18,8 @@ async function runView(search, waitText) {
   return window.document.body.textContent;
 }
 
-const t1 = await runView("?classroom=mpt", "Данные обновлены");
-check("LIVE mpt: rendered fully (footer present)", t1.includes("Данные обновлены"));
+const t1 = await runView("?classroom=mpt", "Обновлено:");
+check("LIVE mpt: rendered fully (footer present)", t1.includes("Обновлено:"));
 check("LIVE mpt: no [object artifacts", !t1.includes("[object"));
 check("LIVE mpt: classroom name from classroom50", t1.includes("Modern Programmer's Tools"));
 check("LIVE mpt: legend present", t1.includes("Оценки и статус проверки"));

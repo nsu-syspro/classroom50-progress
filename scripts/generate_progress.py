@@ -241,8 +241,10 @@ def main() -> int:
             username = (row.get("username") or "").strip()
             if not username:
                 continue
-            full = f"{row.get('first_name', '')} {row.get('last_name', '')}".strip()
-            names[username] = full
+            first = (row.get("first_name") or "").strip()
+            last = (row.get("last_name") or "").strip()
+            # Display order: Last name First name (roster stores First Last).
+            names[username] = f"{last} {first}".strip()
             if (row.get("role") or "student") == "student":
                 roster_students.append(username)
             else:
@@ -293,6 +295,14 @@ def main() -> int:
 
     students = [u for u in roster_students if u not in excluded]
     students += sorted(owners_seen - set(students) - excluded)
+
+    # Sort by last name; students without a roster name (no last name to sort
+    # by) go to the bottom, still sorted among themselves by username.
+    def sort_key(username: str) -> tuple[int, str]:
+        last = names.get(username, "").split(" ")[0]
+        return (0 if last else 1, last or username)
+
+    students.sort(key=sort_key)
 
     doc = {
         "schema": SCHEMA,

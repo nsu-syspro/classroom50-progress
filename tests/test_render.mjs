@@ -54,11 +54,18 @@ await runView("", { "classrooms.json": classrooms }, (text, doc) => [
 
 // --- single classroom view ---
 await runView("?classroom=mpt", { "mpt/data/progress.json": data }, (text, doc) => [
-  ["mpt: h1 is classroom name", (doc.querySelector("h1") || {}).textContent === "Modern Programmer's Tools"],
-  ["mpt: subtitle line", text.includes("NSU Sys.Pro")],
+  ["mpt: title with separator", (doc.querySelector("h1") || {}).textContent === "Modern Programmer's Tools \u00b7 NSU Sys.Pro"],
+  ["mpt: no meta line under title", !doc.querySelector("p.meta")],
   ["mpt: legend text", text.includes("Оценки и статус проверки")],
   ["mpt: badges rendered with labels", text.includes("проверено") && text.includes("на проверке")],
-  ["mpt: student names", text.includes("Данилов")],
+  ["mpt: student names last-first", text.includes("Данилов Лев Антонович")],
+  ["mpt: nameless student last", (() => {
+    const rows = [...doc.querySelectorAll("tbody tr")];
+    const disp = rows.map(r => r.querySelector("td").textContent.trim());
+    const named = disp.filter(d => d !== "vikxxie");
+    return disp[disp.length - 1] === "vikxxie" &&
+      named.every((d, i) => i === 0 || named[i - 1].split(" ")[0] <= d.split(" ")[0]);
+  })()],
   ["mpt: score cells", /\d+\/10/.test(text)],
   ["mpt: PR links", doc.querySelectorAll("a[href*='/pull/1']").length > 0],
   ["mpt: footer has updated timestamp", text.includes("Обновлено:")],

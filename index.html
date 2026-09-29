@@ -128,8 +128,7 @@ async function renderClassroom(slug) {
   try {
     data = await getJson(slug + "/data/progress.json");
   } catch (err) {
-    app.append(el("h1", null, slug));
-    app.append(el("p", "meta", "NSU Sys.Pro"));
+    app.append(el("h1", null, slug + " · NSU Sys.Pro"));
     app.append(el("p", "error", "Не удалось загрузить данные: " + err.message));
     const back = el("a", "back", "← все курсы");
     back.href = "?";
@@ -140,8 +139,7 @@ async function renderClassroom(slug) {
   const back = el("a", "back", "← все курсы");
   back.href = "?";
   app.append(back);
-  app.append(el("h1", null, data.classroom_title || data.classroom));
-  app.append(el("p", "meta", "NSU Sys.Pro"));
+  app.append(el("h1", null, (data.classroom_title || data.classroom) + " · NSU Sys.Pro"));
   const legend = el("p", "legend");
   legend.append("Оценки и статус проверки: ");
   legend.append(el("span", "badge approved", LEGEND_RU.approved));
@@ -224,7 +222,6 @@ async function renderClassroom(slug) {
     warn.rel = "noopener";
     footer.append(warn);
   }
-  footer.append(". Ссылка в ячейке ведёт на ваш pull request с решением.");
   app.append(footer);
 }
 
