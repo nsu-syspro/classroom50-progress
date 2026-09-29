@@ -1,0 +1,32 @@
+name: Validate JSON
+
+# Every push/PR: all publish.json / data/progress.json / classrooms.json
+# files must match the schemas in schemas/. This is the enforcement point
+# for the JSON formats; it keeps human-edited publish.json files honest and
+# catches generator regressions.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - run: pip install jsonschema
+
+      - run: python3 scripts/validate_json.py
+
+      - name: Lint workflows
+        run: |
+          pip install actionlint-py
+          actionlint

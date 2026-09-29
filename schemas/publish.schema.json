@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "publish.schema.json",
+  "title": "classroom50-progress publish knobs",
+  "description": "Per-classroom configuration. Lives at <classroom>/publish.json. This file is edited by humans; the publish workflow reads it to decide whether and what to publish.",
+  "type": "object",
+  "required": ["enabled"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Pointer to this schema, e.g. ../schemas/publish.schema.json. Enables editor validation and autocomplete."
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Master switch. false = classroom is excluded from the workflow matrix: no collection, no page data refresh, hidden from the classroom list. Existing data files are left untouched."
+    },
+    "title": {
+      "type": "string",
+      "description": "Display name shown on the page and in the classroom list (e.g. a course abbreviation). Defaults to the directory name."
+    },
+    "mode": {
+      "enum": ["past-due", "explicit"],
+      "default": "past-due",
+      "description": "past-due: show assignments whose deadline has passed (locked assignments are always skipped). explicit: show only the slugs listed in 'assignments'."
+    },
+    "assignments": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "explicit mode: assignment slugs to publish, e.g. [\"regex-basics\"]. Ignored in past-due mode."
+    },
+    "exclude_students": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Usernames never shown on the page (e.g. dropped students). Staff roles on the roster are excluded automatically."
+    }
+  }
+}

@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
-"""Compare two progress.json files ignoring volatile timestamps.
+"""Compare two JSON files ignoring volatile timestamps.
 
 Usage: compare_progress.py NEW_FILE OLD_FILE
+Any "generated_at" or "collected_at" key anywhere in either document is
+ignored, so pure clock drift does not count as a change.
+
 Exit 0 = content identical (no commit needed), 1 = different (commit),
-2 = old file unreadable/invalid (treat as different).
+2 = new file unreadable (error).
 """
 
 import json
 import sys
+
+VOLATILE = {"generated_at", "collected_at"}
 
 
 def load(path: str) -> dict | None:
@@ -18,10 +23,12 @@ def load(path: str) -> dict | None:
         return None
 
 
-def strip(doc: dict) -> None:
-    doc.pop("generated_at", None)
-    for assignment in doc.get("assignments", []):
-        assignment.pop("collected_at", None)
+def strip(node):
+    if isinstance(node, dict):
+        return {k: strip(v) for k, v in node.items() if k not in VOLATILE}
+    if isinstance(node, list):
+        return [strip(item) for item in node]
+    return node
 
 
 def main() -> int:
@@ -36,9 +43,7 @@ def main() -> int:
     if old is None:
         print("old file missing or invalid -> content changed")
         return 1
-    strip(new)
-    strip(old)
-    if new == old:
+    if strip(new) == strip(old):
         print("no content changes")
         return 0
     print("content changed")

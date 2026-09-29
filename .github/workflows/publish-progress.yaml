@@ -1,15 +1,17 @@
 name: Publish progress
 
-# Refresh progress pages for every classroom in the matrix. Sequence:
-#   1. dispatch the classroom50 collect-scores workflow scoped to the
-#      classroom (fresh scores at publish time), wait for it to finish;
-#   2. generate <classroom>/data/progress.json (scores + roster + assignments
-#      via the config repo Contents API; PR review states via the PRs API);
-#   3. commit it ONLY if the content changed (generated_at/collected_at
-#      timestamps are ignored when comparing); a push triggers the
-#      branch-based Pages deployment.
-# A failed collect or generate turns the run red and commits nothing, so
-# Actions runs are the log of refresh attempts.
+# Refresh progress pages for all enabled classrooms. Sequence:
+#   1. matrix job: discover classroom directories (publish.json present and
+#      enabled != false) -> per-classroom publish jobs;
+#   2. each publish job dispatches the classroom50 collect-scores workflow
+#      (fresh scores at publish time), generates <classroom>/data/progress.json
+#      and commits it ONLY if content changed (timestamps ignored when
+#      comparing; failed runs commit nothing and show up red in Actions);
+#   3. index job: rebuild classrooms.json from the committed data and commit
+#      it if changed; the root page shows the classroom list from it.
+# To add a classroom: create <slug>/publish.json ({"enabled": true}) and an
+# optional <slug>/index.html redirect stub; the matrix picks it up
+# automatically. To pause a classroom: set "enabled": false.
 
 on:
   schedule:
@@ -21,10 +23,6 @@ on:
         description: "Dispatch classroom50 score collection first"
         type: boolean
         default: true
-      classroom:
-        description: "Publish only this classroom (empty = all in the matrix)"
-        type: string
-        default: ""
 
 permissions:
   contents: write
@@ -38,23 +36,15 @@ env:
 
 jobs:
   matrix:
-    # The classroom list lives here; a manual dispatch with the `classroom`
-    # input narrows the matrix to that one classroom.
     runs-on: ubuntu-latest
     outputs:
       classrooms: ${{ steps.list.outputs.classrooms }}
     steps:
+      - uses: actions/checkout@v7
       - id: list
-        env:
-          FILTER: ${{ inputs.classroom }}
         run: |
           set -euo pipefail
-          if [ -n "$FILTER" ]; then
-            LIST="[\"$FILTER\"]"
-          else
-            LIST='["mpt"]'
-          fi
-          echo "classrooms=$LIST" >> "$GITHUB_OUTPUT"
+          echo "classrooms=$(python3 scripts/list_classrooms.py)" >> "$GITHUB_OUTPUT"
 
   publish:
     needs: matrix
@@ -120,5 +110,37 @@ jobs:
           git config user.email "bot@progress.local"
           git add "$FILE"
           git commit -m "progress($CLASSROOM): refresh content"
+          git pull --rebase origin main
+          git push
+
+  index:
+    # Rebuild the classroom list from committed data (after all publishes).
+    needs: publish
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - run: python3 scripts/build_index.py
+
+      - name: Commit if changed
+        run: |
+          set -euo pipefail
+          git fetch origin main -q
+
+          if git cat-file -e "origin/main:classrooms.json" 2>/dev/null; then
+            git show "origin/main:classrooms.json" > /tmp/old.json
+            if python3 scripts/compare_progress.py classrooms.json /tmp/old.json; then
+              echo "no changes to classrooms.json, skipping commit"
+              exit 0
+            fi
+          else
+            echo "first publish of classrooms.json"
+          fi
+
+          git config user.name "progress-bot"
+          git config user.email "bot@progress.local"
+          git add classrooms.json
+          git commit -m "index: refresh classroom list"
           git pull --rebase origin main
           git push

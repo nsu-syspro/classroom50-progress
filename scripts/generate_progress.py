@@ -1,23 +1,27 @@
 #!/usr/bin/env python3
-"""Generate data/progress.json for the classroom50-progress page.
+"""Generate data/progress.json for one classroom.
 
 Reads (via GitHub Contents API, PROGRESS_PAT):
-  - <org>/<config-repo>/mpt/scores.json      (collected scores snapshot)
-  - <org>/<config-repo>/mpt/assignments.json (due dates, names, max scores)
-  - <org>/<config-repo>/mpt/roster.csv       (full names)
+  - <org>/<config-repo>/<classroom>/scores.json      (collected scores snapshot)
+  - <org>/<config-repo>/<classroom>/assignments.json (due dates, names, max)
+  - <org>/<config-repo>/<classroom>/roster.csv       (full names)
 Fetches live per-student PR review states (Feedback PR #1, last APPROVED /
 CHANGES_REQUESTED wins) for every (assignment, student) cell that has a
-collected entry. Writes data/progress.json (schema nsu-syspro/progress/v1).
+collected entry. Writes <classroom>/data/progress.json
+(schema nsu-syspro/progress/v1).
 
-Publish knobs come from publish.json in this repo:
+Classroom knobs come from <classroom>/publish.json in this repo:
   {
+    "enabled": true,               # master switch: publish this classroom
+    "title": "ИСП",                # optional display title
     "mode": "past-due",            # past-due (default) | explicit
     "assignments": [],             # explicit mode: only these slugs
-    "exclude_students": [],        # usernames never shown
-    "show_attempts": true
+    "exclude_students": []         # usernames never shown
   }
 
-Exit codes: 0 ok; 1 config/data error; 2 network error.
+If enabled is false the script exits without writing anything.
+
+Exit codes: 0 ok (or disabled); 1 config/data error; 2 network error.
 """
 
 from __future__ import annotations
@@ -145,8 +149,8 @@ def load_knobs(classroom: str) -> dict:
     path = os.path.join(ROOT, classroom, "publish.json")
     if not os.path.exists(path):
         # Sensible defaults when a classroom has no knobs file yet.
-        return {"mode": "past-due", "assignments": [], "exclude_students": [],
-                "show_attempts": True}
+        return {"enabled": True, "title": classroom, "mode": "past-due",
+                "assignments": [], "exclude_students": []}
     with open(path, encoding="utf-8") as fh:
         return json.load(fh)
 
@@ -196,6 +200,10 @@ def main() -> int:
     now = datetime.now(timezone.utc)
     knobs = load_knobs(CLASSROOM)
 
+    if knobs.get("enabled") is False:
+        print(f"{CLASSROOM}: disabled in publish.json, nothing to do")
+        return 0
+
     assignments_raw = raw_file(CONFIG_REPO, f"{CLASSROOM}/assignments.json")
     scores_raw = raw_file(CONFIG_REPO, f"{CLASSROOM}/scores.json")
     roster_raw = raw_file(CONFIG_REPO, f"{CLASSROOM}/roster.csv")
@@ -210,6 +218,7 @@ def main() -> int:
 
     names: dict[str, str] = {}
     roster_students: list[str] = []
+    staff: set[str] = set()
     if roster_raw:
         for row in csv.DictReader(io.StringIO(roster_raw.decode("utf-8"))):
             username = (row.get("username") or "").strip()
@@ -219,15 +228,10 @@ def main() -> int:
             names[username] = full
             if (row.get("role") or "student") == "student":
                 roster_students.append(username)
+            else:
+                staff.add(username)
 
-    excluded = set(knobs.get("exclude_students") or [])
-    # Teachers/HTA/TA on the roster are never shown.
-    staff = set()
-    if roster_raw:
-        for row in csv.DictReader(io.StringIO(roster_raw.decode("utf-8"))):
-            if (row.get("role") or "student") != "student" and row.get("username"):
-                staff.add(row["username"])
-    excluded |= staff
+    excluded = set(knobs.get("exclude_students") or []) | staff
 
     # --- cells ---
     cells: list[dict] = []
@@ -252,27 +256,23 @@ def main() -> int:
 
     for slug in sorted(published_slugs):
         bucket = scores.get(slug) or {}
-        max_score = next(
-            (a for a in all_assignments if a["slug"] == slug), {}
-        )
-        assignment_max = sum(t.get("points", 0) for t in max_score.get("tests", [])) or 10
+        meta = next((a for a in all_assignments if a["slug"] == slug), {})
+        assignment_max = sum(t.get("points", 0) for t in meta.get("tests", [])) or 10
         for entry in bucket.get("entries", []):
             owner = entry.get("owner") or ""
             if owner in excluded:
                 continue
             subs = entry.get("submissions") or []
             latest = subs[0] if subs else {}
-            cell = {
+            cells.append({
                 "student": owner,
                 "assignment": slug,
                 "score": latest.get("score"),
                 "max_score": latest.get("max-score") or assignment_max,
-                "attempts": len(subs) if knobs.get("show_attempts", True) else None,
                 "review": states.get((slug, owner), "unknown"),
                 "pr_url": f"https://github.com/{ORG}/{CLASSROOM}-{slug}-{owner}/pull/1",
                 "release_url": latest.get("release"),
-            }
-            cells.append(cell)
+            })
 
     students = [u for u in roster_students if u not in excluded]
     students += sorted(owners_seen - set(students) - excluded)
@@ -280,6 +280,7 @@ def main() -> int:
     doc = {
         "schema": SCHEMA,
         "classroom": CLASSROOM,
+        "classroom_title": knobs.get("title") or CLASSROOM,
         "generated_at": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "assignments": [
             {
@@ -288,9 +289,7 @@ def main() -> int:
                 "due": a.get("due"),
                 "max_score": sum(t.get("points", 0) for t in a.get("tests", [])) or 10,
                 "collected_at": (scores.get(a["slug"]) or {}).get("collected_at"),
-                "submitted": len(
-                    (scores.get(a["slug"]) or {}).get("entries", [])
-                ),
+                "submitted": len((scores.get(a["slug"]) or {}).get("entries", [])),
             }
             for a in published
         ],
@@ -306,9 +305,8 @@ def main() -> int:
         json.dump(doc, fh, ensure_ascii=False, indent=1)
         fh.write("\n")
     print(
-        f"progress.json: {len(doc['assignments'])} assignments, "
-        f"{len(doc['students'])} students, {len(cells)} cells, "
-        f"{_HITS} API calls"
+        f"{CLASSROOM}/data/progress.json: {len(doc['assignments'])} assignments, "
+        f"{len(doc['students'])} students, {len(cells)} cells, {_HITS} API calls"
     )
     return 0
 
