@@ -37,14 +37,32 @@ env:
   CONFIG_REPO: classroom50
 
 jobs:
+  matrix:
+    # The classroom list lives here; a manual dispatch with the `classroom`
+    # input narrows the matrix to that one classroom.
+    runs-on: ubuntu-latest
+    outputs:
+      classrooms: ${{ steps.list.outputs.classrooms }}
+    steps:
+      - id: list
+        env:
+          FILTER: ${{ inputs.classroom }}
+        run: |
+          set -euo pipefail
+          if [ -n "$FILTER" ]; then
+            LIST="[\"$FILTER\"]"
+          else
+            LIST='["mpt"]'
+          fi
+          echo "classrooms=$LIST" >> "$GITHUB_OUTPUT"
+
   publish:
+    needs: matrix
     strategy:
       # One broken classroom must not block the others.
       fail-fast: false
       matrix:
-        classroom: [mpt]
-    # Manual runs may target a single classroom.
-    if: ${{ github.event.inputs.classroom == '' || github.event.inputs.classroom == matrix.classroom }}
+        classroom: ${{ fromJSON(needs.matrix.outputs.classrooms) }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -90,22 +108,7 @@ jobs:
 
           if git cat-file -e "origin/main:$FILE" 2>/dev/null; then
             git show "origin/main:$FILE" > /tmp/old.json
-            if python3 - "$FILE" <<'PY'
-import json, sys
-
-with open(sys.argv[1]) as fh:
-    new = json.load(fh)
-with open("/tmp/old.json") as fh:
-    old = json.load(fh)
-
-for doc in (new, old):
-    doc.pop("generated_at", None)
-    for a in doc.get("assignments", []):
-        a.pop("collected_at", None)
-
-sys.exit(0 if new == old else 1)
-PY
-            then
+            if python3 scripts/compare_progress.py "$FILE" /tmp/old.json; then
               echo "no content changes in $FILE, skipping commit"
               exit 0
             fi
