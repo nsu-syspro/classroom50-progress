@@ -2,7 +2,7 @@
  "schema": "nsu-syspro/progress/v1",
  "classroom": "mpt",
  "classroom_title": "Modern Programmer's Tools",
- "generated_at": "2026-09-29T01:29:23Z",
+ "generated_at": "2026-09-29T02:48:58Z",
  "assignments": [
   {
    "slug": "command-line-basics",
@@ -27,6 +27,30 @@
    "max_score": 10,
    "collected_at": "2026-09-28T20:15:16Z",
    "submitted": 17
+  },
+  {
+   "slug": "bash-basics",
+   "name": "Bash basics",
+   "due": "2026-10-02T16:59:00Z",
+   "max_score": 10,
+   "collected_at": "2026-09-28T20:15:16Z",
+   "submitted": 2
+  },
+  {
+   "slug": "git-basics",
+   "name": "Git basics",
+   "due": "2026-10-09T16:59:00Z",
+   "max_score": 10,
+   "collected_at": "2026-09-28T20:15:16Z",
+   "submitted": 1
+  },
+  {
+   "slug": "markup-basics",
+   "name": "Markup basics",
+   "due": "2026-10-23T16:59:00Z",
+   "max_score": 10,
+   "collected_at": "2026-09-28T20:15:16Z",
+   "submitted": 1
   }
  ],
  "students": [
@@ -100,6 +124,24 @@
   }
  ],
  "cells": [
+  {
+   "student": "vladimir212455",
+   "assignment": "bash-basics",
+   "score": 10,
+   "max_score": 10,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-bash-basics-vladimir212455/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-bash-basics-vladimir212455/releases/tag/submit%2F2026-09-25T13-06-19Z-473c677"
+  },
+  {
+   "student": "Semex37",
+   "assignment": "bash-basics",
+   "score": 10,
+   "max_score": 10,
+   "review": "unreviewed",
+   "pr_url": "https://github.com/nsu-syspro/mpt-bash-basics-Semex37/pull/1",
+   "release_url": "https://github.com/nsu-syspro/mpt-bash-basics-semex37/releases/tag/submit%2F2026-09-26T16-04-49Z-a681029"
+  },
   {
    "student": "KycokXleba",
    "assignment": "command-line-basics",

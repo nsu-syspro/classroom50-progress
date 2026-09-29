@@ -14,6 +14,8 @@ Classroom knobs come from <classroom>/publish.json in this repo:
   {
     "enabled": true,               # master switch: publish this classroom
     "mode": "past-due",            # past-due (default) | explicit
+    "show_early": false,           # show assignments with submissions
+                                   # before their deadline
     "assignments": [],             # explicit mode: only these slugs
     "exclude_students": []         # usernames never shown
   }
@@ -157,8 +159,10 @@ def load_knobs(classroom: str) -> dict:
         return json.load(fh)
 
 
-def select_assignments(entries: list[dict], knobs: dict, now: datetime) -> list[dict]:
+def select_assignments(entries: list[dict], knobs: dict, now: datetime,
+                       scores: dict | None = None) -> list[dict]:
     mode = knobs.get("mode", "past-due")
+    show_early = bool(knobs.get("show_early", False))
     out = []
     for entry in entries:
         slug = entry.get("slug")
@@ -169,7 +173,10 @@ def select_assignments(entries: list[dict], knobs: dict, now: datetime) -> list[
                 out.append(entry)
             continue
         due = parse_rfc3339(entry.get("due") or "")
-        if due is not None and due <= now:
+        has_submissions = bool(
+            scores and (scores.get(slug) or {}).get("entries")
+        )
+        if (due is not None and due <= now) or (show_early and has_submissions):
             out.append(entry)
     out.sort(key=lambda e: e.get("due") or "")
     return out
@@ -222,10 +229,9 @@ def main() -> int:
             print(f"classroom name from classroom50: {classroom_name}")
 
     all_assignments = json.loads(assignments_raw)["assignments"]
-    published = select_assignments(all_assignments, knobs, now)
-    published_slugs = {a["slug"] for a in published}
-
     scores = json.loads(scores_raw)["assignments"]
+    published = select_assignments(all_assignments, knobs, now, scores)
+    published_slugs = {a["slug"] for a in published}
 
     names: dict[str, str] = {}
     roster_students: list[str] = []

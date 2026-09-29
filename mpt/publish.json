@@ -4,6 +4,8 @@
   "mode": "past-due",
   "assignments": [],
   "exclude_students": [
-    "aleksiwithlove"
-  ]
+    "aleksiwithlove",
+    "liontiger23"
+  ],
+  "show_early": true
 }

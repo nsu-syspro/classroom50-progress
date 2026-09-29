@@ -46,8 +46,9 @@ Edited by humans. Full reference with per-field docs lives in
   "$schema": "../schemas/publish.schema.json",
   "enabled": true,
   "mode": "past-due",
+  "show_early": true,
   "assignments": [],
-  "exclude_students": ["aleksiwithlove"]
+  "exclude_students": ["aleksiwithlove", "liontiger23"]
 }
 ```
 
@@ -55,6 +56,7 @@ Edited by humans. Full reference with per-field docs lives in
 |-------------------|----------------|-------------|---------|
 | `enabled`         | bool           | (required)  | master switch: `false` = no collection, no page data refresh, hidden from the classroom list; data files stay in place |
 | `mode`            | string         | `past-due`  | `past-due`: assignments whose deadline has passed (locked ones always skipped); `explicit`: only slugs in `assignments` |
+| `show_early`      | bool           | `false`     | `past-due` mode: also show assignments that already have submissions, before their deadline |
 | `assignments`     | array of slugs | `[]`        | used in `explicit` mode only |
 | `exclude_students`| array of names | `[]`        | usernames never shown; roster staff is excluded automatically |
 

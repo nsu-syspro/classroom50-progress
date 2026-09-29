@@ -20,6 +20,11 @@
       "default": "past-due",
       "description": "past-due: show assignments whose deadline has passed (locked assignments are always skipped). explicit: show only the slugs listed in 'assignments'."
     },
+    "show_early": {
+      "type": "boolean",
+      "default": false,
+      "description": "past-due mode: also show assignments that already have at least one collected submission, even before their deadline."
+    },
     "assignments": {
       "type": "array",
       "items": { "type": "string" },
