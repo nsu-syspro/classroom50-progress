@@ -111,7 +111,11 @@ async function renderIndex() {
     const a = el("a", null, c.title || c.slug);
     a.href = "?classroom=" + encodeURIComponent(c.slug);
     const sub = el("span", "sub", null);
-    sub.textContent = "обновлено: " + new Date(c.generated_at).toLocaleString("ru-RU");
+    // Same timestamp the classroom pages show in their footer: the last
+    // publish run (not the per-classroom generation moment, which can lag
+    // the run by minutes).
+    const when = (index.last_run && index.last_run.created_at) || c.generated_at;
+    sub.textContent = "обновлено: " + new Date(when).toLocaleString("ru-RU");
     a.append(sub);
     li.append(a);
     list.append(li);
