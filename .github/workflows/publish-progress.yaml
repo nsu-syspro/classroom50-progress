@@ -120,6 +120,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # The publish jobs commit to main; build the index from the latest
+          # state, not from the SHA this run was dispatched on.
+          ref: main
 
       - run: python3 scripts/build_index.py
 
