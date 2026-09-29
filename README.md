@@ -1,9 +1,9 @@
-# classroom50-progress
+# classroom50-status
 
 Student-facing progress pages for classroom50 classrooms:
 
-- root: https://nsu-syspro.github.io/classroom50-progress/ (classroom list)
-- mpt:  https://nsu-syspro.github.io/classroom50-progress/?classroom=mpt
+- root: https://nsu-syspro.github.io/classroom50-status/ (classroom list)
+- mpt:  https://nsu-syspro.github.io/classroom50-status/?classroom=mpt
   (also `/mpt/`, via a redirect stub)
 
 One common page, one directory per classroom. The page's design and layout

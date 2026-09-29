@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-const BASE = "https://nsu-syspro.github.io/classroom50-progress/";
+const BASE = "https://nsu-syspro.github.io/classroom50-status/";
 let failures = 0;
 const check = (n, c) => { console.log((c ? "ok       " : "FAIL     ") + n); if (!c) failures++; };
 

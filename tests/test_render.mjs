@@ -1,4 +1,4 @@
-// Render-test for classroom50-progress/index.html using jsdom.
+// Render-test for classroom50-status/index.html using jsdom.
 // Usage: node test_render.mjs <repo_dir>
 // Verifies both views (classroom list, single classroom) render fully:
 // no "[object" artifacts, expected texts/badges/links present.
@@ -22,13 +22,13 @@ function check(name, cond) {
 
 async function runView(search, files, checks) {
   const dom = new JSDOM('<!DOCTYPE html><html><body><div id="app"></div></body></html>', {
-    url: "https://nsu-syspro.github.io/classroom50-progress/" + search,
+    url: "https://nsu-syspro.github.io/classroom50-status/" + search,
     runScripts: "outside-only",
   });
   const { window } = dom;
   window.fetch = async (url) => {
     const path = new window.URL(url, window.location.href).pathname
-      .replace("/classroom50-progress", "").replace(/^\//, "");
+      .replace("/classroom50-status", "").replace(/^\//, "");
     if (!(path in files)) throw new Error("unexpected fetch: " + path);
     return { ok: true, json: async () => JSON.parse(readFileSync(join(repo, path), "utf8")) };
   };

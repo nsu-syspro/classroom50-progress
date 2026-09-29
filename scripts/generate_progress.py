@@ -75,7 +75,7 @@ def api(path: str) -> tuple[int, bytes]:
         headers={
             "Authorization": f"Bearer {_TOK}",
             "Accept": "application/vnd.github+json",
-            "User-Agent": "classroom50-progress",
+            "User-Agent": "classroom50-status",
         },
     )
     for attempt in range(4):
@@ -113,7 +113,7 @@ def raw_file(repo: str, path: str) -> bytes | None:
         headers={
             "Authorization": f"Bearer {_TOK}",
             "Accept": "application/vnd.github.raw+json",
-            "User-Agent": "classroom50-progress",
+            "User-Agent": "classroom50-status",
         },
     )
     for attempt in range(3):
