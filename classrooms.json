@@ -1,6 +1,9 @@
 {
  "schema": "nsu-syspro/progress-classrooms/v1",
- "last_run": null,
+ "last_run": {
+  "conclusion": "success",
+  "created_at": ""
+ },
  "classrooms": [
   {
    "slug": "mpt",
