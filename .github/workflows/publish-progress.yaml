@@ -125,10 +125,14 @@ jobs:
           # state, not from the SHA this run was dispatched on.
           ref: main
 
-      - run: python3 scripts/build_index.py
+      - name: Build index
         env:
           LAST_RUN_CONCLUSION: ${{ needs.publish.result }}
-          LAST_RUN_AT: ${{ github.event.schedule || github.event.created_at }}
+        run: |
+          # Job start doubles as the refresh timestamp.
+          LAST_RUN_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          export LAST_RUN_AT
+          python3 scripts/build_index.py
 
       - name: Commit if changed
         run: |
