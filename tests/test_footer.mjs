@@ -6,11 +6,16 @@ const data = JSON.parse(readFileSync(repo + "/mpt/data/progress.json", "utf8"));
 const index = JSON.parse(readFileSync(repo + "/classrooms.json", "utf8"));
 let failures = 0;
 const check = (n, c) => { console.log((c ? "ok       " : "FAIL     ") + n); if (!c) failures++; };
-async function run(lastRun) {
+async function run(lastRun, emptyApi = false) {
   const dom = new JSDOM('<div id="app"></div>', { url: "https://x/cp/?classroom=mpt", runScripts: "outside-only" });
-  const files = { "mpt/data/progress.json": data, "classrooms.json": { ...index, last_run: lastRun } };
+  const files = { "mpt/data/progress.json": data, "classrooms.json": index };
   dom.window.fetch = async (url) => {
-    const p = new dom.window.URL(url, "https://x/cp/").pathname.replace("/cp/", "");
+    const u = new dom.window.URL(url, "https://x/cp/");
+    if (u.hostname === "api.github.com") {
+      if (emptyApi) return { ok: true, json: async () => ({ workflow_runs: [] }) };
+      return { ok: true, json: async () => ({ workflow_runs: [lastRun ? { conclusion: lastRun.conclusion, run_started_at: lastRun.created_at } : {}] }) };
+    }
+    const p = u.pathname.replace("/cp/", "");
     return { ok: true, json: async () => files[p] };
   };
   dom.window.eval(js);
@@ -26,7 +31,7 @@ check("success: no failure marker", !r.text.includes("с ошибкой"));
 check("success: keeps pr hint", r.text.includes("pull request"));
 r = await run({ conclusion: "failure", created_at: "2026-09-29T03:09:34Z" });
 check("failure: indicator shown", r.text.includes("обновление с ошибкой"));
-check("failure: indicator links to Actions", r.links.filter(a => a.href.includes("publish-progress.yaml")).length >= 2);
-r = await run(null);
+check("failure: indicator links to Actions", r.links.every(a => a.href.includes("publish-progress.yaml")));
+r = await run(null, true);
 check("no last_run: falls back to generated_at", r.links.some(a => a.href.includes("publish-progress.yaml")));
 process.exit(failures ? 1 : 0);

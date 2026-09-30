@@ -105,6 +105,8 @@ async function renderIndex() {
     app.append(el("p", "meta", "Пока нет опубликованных курсов."));
     return;
   }
+  const lastRun = await getLastRun();
+  const runTime = lastRun && lastRun.created_at ? new Date(lastRun.created_at) : null;
   const list = el("ul", "classrooms");
   for (const c of classrooms) {
     const li = el("li");
@@ -112,10 +114,10 @@ async function renderIndex() {
     a.href = "?classroom=" + encodeURIComponent(c.slug);
     const sub = el("span", "sub", null);
     // Same timestamp the classroom pages show in their footer: the last
-    // publish run (not the per-classroom generation moment, which can lag
-    // the run by minutes).
-    const when = (index.last_run && index.last_run.created_at) || c.generated_at;
-    sub.textContent = "обновлено: " + new Date(when).toLocaleString("ru-RU");
+    // publish run, fetched live (fall back to generation time if the API
+    // call fails).
+    const when = runTime || (c.generated_at ? new Date(c.generated_at) : null);
+    sub.textContent = "обновлено: " + (when ? when.toLocaleString("ru-RU") : "?");
     a.append(sub);
     li.append(a);
     list.append(li);
@@ -123,8 +125,22 @@ async function renderIndex() {
   app.append(list);
 }
 
-/* ---- single classroom view ---- */
+/* ---- publish-run status, fetched live from the public Actions API ---- */
 const RUNS_URL = "https://github.com/nsu-syspro/classroom50-status/actions/workflows/publish-progress.yaml";
+const RUN_API = "https://api.github.com/repos/nsu-syspro/classroom50-status/actions/workflows/publish-progress.yaml/runs?per_page=1";
+
+async function getLastRun() {
+  try {
+    const resp = await fetch(RUN_API, { headers: { "Accept": "application/vnd.github+json" } });
+    if (!resp.ok) return null;
+    const runs = (await resp.json()).workflow_runs || [];
+    return runs[0] ? { conclusion: runs[0].conclusion, created_at: runs[0].run_started_at } : null;
+  } catch {
+    return null;
+  }
+}
+
+/* ---- single classroom view ---- */
 
 async function renderClassroom(slug) {
   app.replaceChildren();
@@ -203,12 +219,9 @@ async function renderClassroom(slug) {
   table.append(thead, tbody);
   app.append(table);
 
-  // footer: last refresh date (linked to the Actions run history, where a
-  // failed run can be re-run) + a visible indicator when it failed
-  let lastRun = null;
-  try {
-    lastRun = (await getJson("classrooms.json")).last_run;
-  } catch { /* index data is optional for the footer */ }
+  // footer: last refresh date + failure indicator, fetched LIVE from the
+  // public Actions API (no commit needed for timestamps)
+  const lastRun = await getLastRun();
 
   const footer = el("footer");
   const failed = lastRun && lastRun.conclusion !== "success";

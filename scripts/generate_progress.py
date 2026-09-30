@@ -281,8 +281,11 @@ def main() -> int:
             owner = entry.get("owner") or ""
             if owner in excluded:
                 continue
+            # Only the LATEST submission matters for status; submissions are
+            # ordered newest-first, but sort defensively in case that ever
+            # changes.
             subs = entry.get("submissions") or []
-            latest = subs[0] if subs else {}
+            latest = min(subs, key=lambda x: x.get("datetime") or "", default={})
             cells.append({
                 "student": owner,
                 "assignment": slug,

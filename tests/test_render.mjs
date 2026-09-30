@@ -27,8 +27,12 @@ async function runView(search, files, checks) {
   });
   const { window } = dom;
   window.fetch = async (url) => {
-    const path = new window.URL(url, window.location.href).pathname
-      .replace("/classroom50-status", "").replace(/^\//, "");
+    const u = new window.URL(url, window.location.href);
+    if (u.hostname === "api.github.com") {
+      // stub Actions API: last run succeeded recently
+      return { ok: true, json: async () => ({ workflow_runs: [{ conclusion: "success", run_started_at: "2026-09-29T12:00:00Z" }] }) };
+    }
+    const path = u.pathname.replace("/classroom50-status", "").replace(/^\//, "");
     if (!(path in files)) throw new Error("unexpected fetch: " + path);
     return { ok: true, json: async () => JSON.parse(readFileSync(join(repo, path), "utf8")) };
   };

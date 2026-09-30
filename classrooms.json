@@ -1,9 +1,5 @@
 {
- "schema": "nsu-syspro/progress-classrooms/v1",
- "last_run": {
-  "conclusion": "success",
-  "created_at": "2026-09-29T20:20:16Z"
- },
+ "schema": "nsu-syspro/progress-classrooms/v2",
  "classrooms": [
   {
    "slug": "mpt",
