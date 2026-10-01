@@ -282,10 +282,12 @@ def main() -> int:
             if owner in excluded:
                 continue
             # Only the LATEST submission matters for status; submissions are
-            # ordered newest-first, but sort defensively in case that ever
-            # changes.
+            # ordered newest-first (subs[0] is the latest), but sort defensively
+            # in case that ever changes. NOTE: newest-first means max(), not
+            # min(): min() would pin the FIRST attempt, showing a stale
+            # low score for anyone who re-submitted.
             subs = entry.get("submissions") or []
-            latest = min(subs, key=lambda x: x.get("datetime") or "", default={})
+            latest = max(subs, key=lambda x: x.get("datetime") or "", default={})
             cells.append({
                 "student": owner,
                 "assignment": slug,
